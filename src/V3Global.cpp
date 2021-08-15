@@ -26,6 +26,7 @@
 #include "V3Parse.h"
 #include "V3ParseSym.h"
 #include "V3Stats.h"
+#include <sys/time.h>
 
 //######################################################################
 // V3Global
@@ -33,6 +34,18 @@
 void V3Global::boot() {
     UASSERT(!m_rootp, "call once");
     m_rootp = new AstNetlist;
+    gettimeofday(&m_verilatorStartTime, NULL);
+}
+
+string V3Global::printTimeStamp() {
+    std::ostringstream out;
+    struct timeval current_time;
+    struct timeval diff_time;
+
+    gettimeofday(&current_time, NULL);
+    timersub( &current_time, &m_verilatorStartTime, &diff_time );
+    out << "[" << std::setw(5)<< diff_time.tv_sec<<"."<< std::setfill('0') << std::setw(6) <<diff_time.tv_usec<<"]";
+    return out.str();
 }
 
 void V3Global::clear() {

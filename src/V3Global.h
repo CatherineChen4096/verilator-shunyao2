@@ -32,6 +32,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <sys/time.h>
 
 class AstNetlist;
 class V3HierBlockPlan;
@@ -112,6 +113,8 @@ class V3Global final {
     bool m_hasSCTextSections = false;  // Has `systemc_* sections that need to be emitted
     bool m_useParallelBuild = false;  // Use parallel build for model
     bool m_useRandomizeMethods = false;  // Need to define randomize() class methods
+    struct timeval m_verilatorStartTime ;
+
 
     // Memory address to short string mapping (for debug)
     std::unordered_map<const void*, std::string>
@@ -133,6 +136,7 @@ public:
     bool assertScoped() const { return m_assertScoped; }
 
     // METHODS
+    string printTimeStamp();
     void readFiles();
     void checkTree() const;
     static void dumpCheckGlobalTree(const string& stagename, int newNumber = 0,

@@ -117,7 +117,7 @@ public:
 
     // METHODS
     void dump() {
-        UINFO(2, "dumpPoints...\n");
+        UINFOST(2, "dumpPoints...\n");
         VlcPoint::dumpHeader();
         for (const auto& i : *this) {
             const VlcPoint& point = pointNumber(i.second);

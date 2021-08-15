@@ -22,6 +22,7 @@
 
 // Limited V3 headers here - this is a base class for Vlc etc
 #include "V3String.h"
+//#include "V3Global.h"
 
 #include <array>
 #include <bitset>
@@ -370,7 +371,13 @@ inline void v3errorEndFatal(std::ostringstream& sstr) {
 #define UINFO(level, stmsg) \
     do { \
         if (VL_UNCOVERABLE(debug() >= (level))) { \
-            cout << "- " << V3Error::lineStr(__FILE__, __LINE__) << stmsg; \
+            cout << v3Global.printTimeStamp() <<  " - " << V3Error::lineStr(__FILE__, __LINE__) << stmsg; \
+        } \
+    } while (false)
+#define UINFOST(level, stmsg) \
+    do { \
+        if (VL_UNCOVERABLE(debug() >= (level))) { \
+            cout  <<  " - " << V3Error::lineStr(__FILE__, __LINE__) << stmsg; \
         } \
     } while (false)
 #define UINFONL(level, stmsg) \

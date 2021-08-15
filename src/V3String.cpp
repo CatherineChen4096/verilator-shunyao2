@@ -556,7 +556,7 @@ string VSpellCheck::bestCandidateInfo(const string& goal, EditDistance& distance
         if (min_distance > cutoff) continue;  // Short-circuit if already too bad
 
         const EditDistance dist = editDistance(goal, candidate);
-        UINFO(9, "EditDistance dist=" << dist << " cutoff=" << cutoff << " goal=" << goal
+        UINFOST(9, "EditDistance dist=" << dist << " cutoff=" << cutoff << " goal=" << goal
                                       << " candidate=" << candidate << endl);
         if (dist < distancer && dist <= cutoff) {
             distancer = dist;

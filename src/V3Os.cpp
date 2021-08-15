@@ -100,9 +100,9 @@ string V3Os::getenvStr(const string& envvar, const string& defaultValue) {
 
 void V3Os::setenvStr(const string& envvar, const string& value, const string& why) {
     if (why != "") {
-        UINFO(1, "export " << envvar << "=" << value << " # " << why << endl);
+        UINFOST(1, "export " << envvar << "=" << value << " # " << why << endl);
     } else {
-        UINFO(1, "export " << envvar << "=" << value << endl);
+        UINFOST(1, "export " << envvar << "=" << value << endl);
     }
 #if defined(_WIN32) || defined(__MINGW32__)
     _putenv_s(envvar.c_str(), value.c_str());
@@ -351,7 +351,7 @@ void V3Os::u_sleep(int64_t usec) {
 // METHODS (sub command)
 
 int V3Os::system(const string& command) {
-    UINFO(1, "Running system: " << command << endl);
+    UINFOST(1, "Running system: " << command << endl);
     const int ret = ::system(command.c_str());
     if (VL_UNCOVERABLE(ret == -1)) {
         v3fatal("Failed to execute command:"  // LCOV_EXCL_LINE
@@ -360,7 +360,7 @@ int V3Os::system(const string& command) {
     } else {
         UASSERT(WIFEXITED(ret), "system(" << command << ") returned unexpected value of " << ret);
         const int exit_code = WEXITSTATUS(ret);
-        UINFO(1, command << " returned exit code of " << exit_code << std::endl);
+        UINFOST(1, command << " returned exit code of " << exit_code << std::endl);
         UASSERT(exit_code >= 0, "exit code must not be negative");
         return exit_code;
     }

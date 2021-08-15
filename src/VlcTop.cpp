@@ -29,7 +29,7 @@
 //######################################################################
 
 void VlcTop::readCoverage(const string& filename, bool nonfatal) {
-    UINFO(2, "readCoverage " << filename << endl);
+    UINFOST(2, "readCoverage " << filename << endl);
 
     std::ifstream is{filename.c_str()};
     if (!is) {
@@ -42,7 +42,7 @@ void VlcTop::readCoverage(const string& filename, bool nonfatal) {
 
     while (!is.eof()) {
         const string line = V3Os::getline(is);
-        // UINFO(9," got "<<line<<endl);
+        // UINFOST(9," got "<<line<<endl);
         if (line[0] == 'C') {
             string::size_type secspace = 3;
             for (; secspace < line.length(); secspace++) {
@@ -50,7 +50,7 @@ void VlcTop::readCoverage(const string& filename, bool nonfatal) {
             }
             const string point = line.substr(3, secspace - 3);
             uint64_t hits = std::atoll(line.c_str() + secspace + 1);
-            // UINFO(9,"   point '"<<point<<"'"<<" "<<hits<<endl);
+            //UINFOST(9,"   point '"<<point<<"'"<<" "<<hits<<endl);
 
             uint64_t pointnum = points().findAddPoint(point, hits);
             if (pointnum) {}  // Prevent unused
@@ -65,7 +65,7 @@ void VlcTop::readCoverage(const string& filename, bool nonfatal) {
 }
 
 void VlcTop::writeCoverage(const string& filename) {
-    UINFO(2, "writeCoverage " << filename << endl);
+    UINFOST(2, "writeCoverage " << filename << endl);
 
     std::ofstream os{filename.c_str()};
     if (!os) {
@@ -81,7 +81,7 @@ void VlcTop::writeCoverage(const string& filename) {
 }
 
 void VlcTop::writeInfo(const string& filename) {
-    UINFO(2, "writeInfo " << filename << endl);
+    UINFOST(2, "writeInfo " << filename << endl);
 
     std::ofstream os{filename.c_str()};
     if (!os) {
@@ -147,7 +147,7 @@ struct CmpComputrons {
 };
 
 void VlcTop::rank() {
-    UINFO(2, "rank...\n");
+    UINFOST(2, "rank...\n");
     uint64_t nextrank = 1;
 
     // Sort by computrons, so fast tests get selected first
@@ -172,7 +172,7 @@ void VlcTop::rank() {
     // solution and move up to larger subset of tests.  (Aka quick sort.)
     while (true) {
         if (debug()) {
-            UINFO(9, "Left on iter" << nextrank << ": ");  // LCOV_EXCL_LINE
+            UINFOST(9, "Left on iter" << nextrank << ": ");  // LCOV_EXCL_LINE
             remaining.dump();  // LCOV_EXCL_LINE
         }
         VlcTest* bestTestp = nullptr;
@@ -210,7 +210,7 @@ void VlcTop::annotateCalc() {
             unsigned thresh
                 = (!threshStr.empty()) ? std::atoi(threshStr.c_str()) : opt.annotateMin();
             const bool ok = (point.count() >= thresh);
-            UINFO(9, "AnnoCalc count " << filename << ":" << lineno << ":" << point.column() << " "
+            UINFOST(9, "AnnoCalc count " << filename << ":" << lineno << ":" << point.column() << " "
                                        << point.count() << " " << point.linescov() << '\n');
             // Base coverage
             source.incCount(lineno, point.column(), point.count(), ok);
@@ -249,14 +249,14 @@ void VlcTop::annotateCalcNeeded() {
     int totOk = 0;
     for (auto& si : m_sources) {
         VlcSource& source = si.second;
-        // UINFO(1,"Source "<<source.name()<<endl);
+        // UINFOST(1,"Source "<<source.name()<<endl);
         if (opt.annotateAll()) source.needed(true);
         VlcSource::LinenoMap& lines = source.lines();
         for (auto& li : lines) {
             VlcSource::ColumnMap& cmap = li.second;
             for (auto& ci : cmap) {
                 VlcSourceCount& col = ci.second;
-                // UINFO(0,"Source "<<source.name()<<":"<<col.lineno()<<":"<<col.column()<<endl);
+                // UINFOST(0,"Source "<<source.name()<<":"<<col.lineno()<<":"<<col.column()<<endl);
                 ++totCases;
                 if (col.ok()) {
                     ++totOk;
@@ -281,7 +281,7 @@ void VlcTop::annotateOutputFiles(const string& dirname) {
         const string filename = source.name();
         const string outfilename = dirname + "/" + V3Os::filenameNonDir(filename);
 
-        UINFO(1, "annotateOutputFile " << filename << " -> " << outfilename << endl);
+        UINFOST(1, "annotateOutputFile " << filename << " -> " << outfilename << endl);
 
         std::ifstream is{filename.c_str()};
         if (!is) {
@@ -310,7 +310,7 @@ void VlcTop::annotateOutputFiles(const string& dirname) {
                 VlcSource::ColumnMap& cmap = lit->second;
                 for (auto& ci : cmap) {
                     VlcSourceCount& col = ci.second;
-                    // UINFO(0,"Source
+                    // UINFOST(0,"Source
                     // "<<source.name()<<":"<<col.lineno()<<":"<<col.column()<<endl);
                     os << (col.ok() ? " " : "%") << std::setfill('0') << std::setw(6)
                        << col.count() << "\t" << line << '\n';
