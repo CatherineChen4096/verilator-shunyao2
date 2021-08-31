@@ -450,7 +450,6 @@ m4_foreach([cflag],[
         [-Wno-parentheses-equality],
         [-Wno-sign-compare],
         [-Wno-uninitialized],
-        [-Wno-unused-but-set-variable],
         [-Wno-unused-parameter],
         [-Wno-unused-variable],
         [-Wno-shadow]],[
