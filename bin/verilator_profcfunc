@@ -67,8 +67,13 @@ def profcfunc(filename):
     groups['design'] = collections.defaultdict(lambda: 0)
     groups['module'] = collections.defaultdict(lambda: 0)
 
+    groups_sec = {}
+    groups_sec['type'] = collections.defaultdict(lambda: 0)
+    groups_sec['design'] = collections.defaultdict(lambda: 0)
+    groups_sec['module'] = collections.defaultdict(lambda: 0)
     for func in funcs:
         pct = funcs[func]['pct']
+        sec = funcs[func]['sec']
         vfunc = func
 
         funcarg = re.sub(r'^.*\(', '', func)
@@ -91,17 +96,26 @@ def profcfunc(filename):
             groups['type']["Verilog Blocks under " + design] += pct
             groups['design'][design] += pct
             groups['module'][linefunc] += pct
+            groups_sec['type']["Verilog Blocks under " + design] += sec
+            groups_sec['design'][design] += sec
+            groups_sec['module'][linefunc] += sec
         elif design:
             vfunc = "VCommon   " + func
             vdesign = design
             groups['type']["Common code under " + design] += pct
             groups['design'][design] += pct
             groups['module'][design + " common code"] += pct
+            groups_sec['type']["Common code under " + design] += sec
+            groups_sec['design'][design] += sec
+            groups_sec['module'][design + " common code"] += sec
         elif re.match(r'(VL_[A-Z0-9_]+|_?vl_[a-zA-Z0-9_]+|Verilated)', vfunc):
             vfunc = "VLib      " + func
             groups['type']['VLib'] += pct
             groups['design']['VLib'] += pct
             groups['module']['VLib'] += pct
+            groups_sec['type']['VLib'] += sec
+            groups_sec['design']['VLib'] += sec
+            groups_sec['module']['VLib'] += sec
         elif re.match(r'^_mcount_private', vfunc):
             vfunc = "Prof      " + func
             groups['type']['Prof'] += pct
@@ -112,6 +126,9 @@ def profcfunc(filename):
             groups['type']['C++'] += pct
             groups['design']['C++'] += pct
             groups['module']['C++'] += pct
+            groups_sec['type']['C++'] += sec
+            groups_sec['design']['C++'] += sec
+            groups_sec['module']['C++'] += sec
 
         if vfunc not in vfuncs:
             vfuncs[vfunc] = funcs[func]
@@ -121,10 +138,17 @@ def profcfunc(filename):
             vfuncs[vfunc]['calls'] += funcs[func]['calls']
             vfuncs[vfunc]['sec'] += funcs[func]['sec']
 
+    total_sec = {}
+    total_sec['type'] =   0.0
+    total_sec['design'] = 0.0
+    total_sec['module'] = 0.0
     for ftype in ['type', 'design', 'module']:
         missing = 100
         for item in groups[ftype].keys():
             missing -= groups[ftype][item]
+            #print("%s %s :%f\n"%(ftype,item,groups_sec[ftype][item]))
+            total_sec[ftype] += groups_sec[ftype][item]
+
         groups[ftype]["\377Unaccounted for/rounding error"] = missing
 
         print("Overall summary by %s:" % ftype)
@@ -132,7 +156,7 @@ def profcfunc(filename):
         for what in sorted(groups[ftype].keys()):
             # \377 used to establish sort order
             pwhat = re.sub(r'^\377', '', what)
-            print("  %6.2f  %s" % (groups[ftype][what], pwhat))
+            print("  %6.2f  %s" % (groups_sec[ftype][what]*100/total_sec[ftype], pwhat))
         print()
 
     design_width = 1
