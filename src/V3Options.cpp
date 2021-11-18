@@ -404,13 +404,26 @@ string V3Options::allArgsString() const VL_MT_SAFE {
     return out;
 }
 
+inline bool ends_with(std::string const & value, std::string const & ending)
+{
+    if (ending.size() > value.size()) return false;
+    return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+}
 // Delete some options for Verilation of the hierarchical blocks.
 string V3Options::allArgsStringForHierBlock(bool forTop) const {
     std::set<string> vFiles;
     for (const auto& vFile : m_vFiles) vFiles.insert(vFile);
     string out;
+    std::string vfile_subname(".v");
+    std::string svfile_subname(".sv");
+    std::string hfile_subname(".h");
+    std::string hppfile_subname(".hpp");
     for (std::list<string>::const_iterator it = m_impp->m_allArgs.begin();
          it != m_impp->m_allArgs.end(); ++it) {
+        if (ends_with((*it), vfile_subname) || ends_with((*it), svfile_subname) ||
+            ends_with((*it), hfile_subname) || ends_with((*it), hppfile_subname)  ) {
+            continue;
+        }
         int skip = 0;
         if (it->length() >= 2 && (*it)[0] == '-' && (*it)[1] == '-') {
             skip = 2;
