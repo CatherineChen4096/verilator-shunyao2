@@ -25,10 +25,11 @@ os.chdir(Args.directory)
 rev = 'UNKNOWN_REV'
 data = os.popen('git describe').read()
 
-match = re.search(r'^(v[0-9].*)', data)
-if match:
-    rev = match.group(1)
-rev = re.sub('_', '.', rev)
+#match = re.search(r'^(v[0-9].*)', data)
+#if match:
+#    rev = match.group(1)
+#rev = re.sub('_', '.', rev)
+rev = data.strip('\n')
 
 data = os.popen('git status').read()
 if (re.search('Changed but not updated', data, flags=re.IGNORECASE)
