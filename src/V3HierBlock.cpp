@@ -214,6 +214,7 @@ string V3HierBlock::vFileIfNecessary() const {
 
 void V3HierBlock::writeCommandArgsFile(bool forCMake) const {
     const std::unique_ptr<std::ofstream> of{V3File::new_ofstream(commandArgsFileName(forCMake))};
+    *of << v3Global.opt.allArgsStringForHierBlock(false) << "\n";
     *of << "--cc\n";
 
     if (!forCMake) {
@@ -230,7 +231,6 @@ void V3HierBlock::writeCommandArgsFile(bool forCMake) const {
     // Hierarchical blocks should not use multi-threading,
     // but needs to be thread safe when top is multi-threaded.
     if (v3Global.opt.threads() > 0) *of << "--threads 1\n";
-    *of << v3Global.opt.allArgsStringForHierBlock(false) << "\n";
 }
 
 string V3HierBlock::commandArgsFileName(bool forCMake) const {
@@ -400,6 +400,7 @@ void V3HierBlockPlan::writeCommandArgsFiles(bool forCMake) const {
     // For the top module
     const std::unique_ptr<std::ofstream> of{
         V3File::new_ofstream(topCommandArgsFileName(forCMake))};
+    *of << v3Global.opt.allArgsStringForHierBlock(true) << "\n";
     if (!forCMake) {
         // Load wrappers first not to be overwritten by the original HDL
         for (const_iterator it = begin(); it != end(); ++it) {
@@ -429,7 +430,6 @@ void V3HierBlockPlan::writeCommandArgsFiles(bool forCMake) const {
         *of << "--threads " << cvtToStr(v3Global.opt.threads()) << "\n";
     }
     *of << (v3Global.opt.systemC() ? "--sc" : "--cc") << "\n";
-    *of << v3Global.opt.allArgsStringForHierBlock(true) << "\n";
 }
 
 string V3HierBlockPlan::topCommandArgsFileName(bool forCMake) {
