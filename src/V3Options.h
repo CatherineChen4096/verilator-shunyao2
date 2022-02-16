@@ -288,6 +288,7 @@ private:
     bool m_xInitialEdge = false;    // main switch: --x-initial-edge
     bool m_xmlOnly = false;         // main switch: --xml-only
     bool m_logEnable = false;       // main switch: --log
+    bool m_metadata = false;  // main switch: --metadata
 
     int         m_buildJobs = -1;    // main switch: --build-jobs, -j
     int         m_convergeLimit = 100;  // main switch: --converge-limit
@@ -507,6 +508,7 @@ public:
     bool xInitialEdge() const { return m_xInitialEdge; }
     bool xmlOnly() const { return m_xmlOnly; }
     bool logEnable() const { return m_logEnable; }
+    bool metadata() const { return m_metadata; }
     bool topIfacesSupported() const { return lintOnly() && !hierarchical(); }
 
     int buildJobs() const VL_MT_SAFE { return m_buildJobs; }

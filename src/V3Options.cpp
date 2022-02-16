@@ -1617,6 +1617,7 @@ void V3Options::parseOptsList(FileLine* fl, const string& optdir, int argc, char
         }
     });
 
+    DECL_OPTION("-metadata", OnOff, &m_metadata);
     DECL_OPTION("-y", CbVal, [this, &optdir](const char* valp) {
         addIncDirUser(parseFileArg(optdir, string(valp)));
     });
