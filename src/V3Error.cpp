@@ -224,6 +224,11 @@ void V3Error::v3errorEnd(std::ostringstream& sstr, const string& extra) {
 #endif
     ) {
         std::cerr << msg;
+#ifndef V3ERROR_NO_GLOBAL_
+        if (v3Global.opt.logEnable()) {
+            v3Global.opt.logFile() <<  msg;
+	}
+#endif
     }
     if (!s_errorSuppressed
         && !(s_errorCode == V3ErrorCode::EC_INFO || s_errorCode == V3ErrorCode::USERINFO)) {
@@ -233,6 +238,13 @@ void V3Error::v3errorEnd(std::ostringstream& sstr, const string& extra) {
             std::cerr << warnMore() << "... For " << (anError ? "error" : "warning")
                       << " description see https://verilator.org/warn/" << s_errorCode.ascii()
                       << "?v=" << PACKAGE_VERSION_NUMBER_STRING << endl;
+#ifndef V3ERROR_NO_GLOBAL_
+        if (v3Global.opt.logEnable()) {
+            v3Global.opt.logFile() << warnMore() << "... For " << (anError ? "error" : "warning")
+                  << " description see https://verilator.org/warn/" << s_errorCode.ascii()
+                  << "?v=" << PACKAGE_VERSION_NUMBER_STRING << endl;
+        }
+#endif
         }
         if (!s_describedEachWarn[s_errorCode] && !s_pretendError[s_errorCode]) {
             s_describedEachWarn[s_errorCode] = true;
@@ -241,12 +253,27 @@ void V3Error::v3errorEnd(std::ostringstream& sstr, const string& extra) {
                 std::cerr << warnMore() << "... Use \"/* verilator lint_off "
                           << s_errorCode.ascii()
                           << " */\" and lint_on around source to disable this message." << endl;
+#ifndef V3ERROR_NO_GLOBAL_
+                if (v3Global.opt.logEnable()) {
+                    v3Global.opt.logFile() << warnMore() << "... Use \"/* verilator lint_off "
+                          << s_errorCode.ascii()
+                          << " */\" and lint_on around source to disable this message." << endl;
+                }
+#endif
             }
             if (s_errorCode.dangerous()) {
                 std::cerr << warnMore() << "*** See https://verilator.org/warn/"
                           << s_errorCode.ascii() << " before disabling this,\n";
                 std::cerr << warnMore() << "else you may end up with different sim results."
                           << endl;
+#ifndef V3ERROR_NO_GLOBAL_
+                if (v3Global.opt.logEnable()) {
+                    v3Global.opt.logFile()  << warnMore() << "*** See https://verilator.org/warn/"
+                          << s_errorCode.ascii() << " before disabling this,\n";
+                    v3Global.opt.logFile()  << warnMore() << "else you may end up with different sim results."
+                          << endl;
+                }
+#endif
             }
         }
         // If first warning is not the user's fault (internal/unsupported) then give the website

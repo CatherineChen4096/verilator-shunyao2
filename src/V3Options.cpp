@@ -1602,6 +1602,16 @@ void V3Options::parseOptsList(FileLine* fl, const string& optdir, int argc, char
         m_xmlOutput = valp;
         m_xmlOnly = true;
     });
+    DECL_OPTION("-log", CbVal, [this,fl](const char* valp) {
+        m_logFilename = valp;
+	m_logFile.open(m_logFilename, std::ofstream::out );
+	if (m_logFile.is_open()) {
+		m_logEnable = true;
+	}
+	else {
+		fl->v3error("Can't open log file ! " << valp);
+	}
+    });
 
     DECL_OPTION("-y", CbVal, [this, &optdir](const char* valp) {
         addIncDirUser(parseFileArg(optdir, string(valp)));

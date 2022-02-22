@@ -28,6 +28,8 @@
 #include <string>
 #include <vector>
 
+#include <iostream>
+#include <fstream>
 class V3OptionsImp;
 class FileLine;
 
@@ -285,6 +287,7 @@ private:
     bool m_vpi = false;             // main switch: --vpi
     bool m_xInitialEdge = false;    // main switch: --x-initial-edge
     bool m_xmlOnly = false;         // main switch: --xml-only
+    bool m_logEnable = false;       // main switch: --log
 
     int         m_buildJobs = -1;    // main switch: --build-jobs, -j
     int         m_convergeLimit = 100;  // main switch: --converge-limit
@@ -338,6 +341,9 @@ private:
     string      m_xAssign;      // main switch: --x-assign
     string      m_xInitial;     // main switch: --x-initial
     string      m_xmlOutput;    // main switch: --xml-output
+    string      m_logFilename;  // main switch: --log
+    std::ofstream     m_logFile;
+
 
     // Language is now held in FileLine, on a per-node basis. However we still
     // have a concept of the default language at a global level.
@@ -500,6 +506,7 @@ public:
     bool vpi() const { return m_vpi; }
     bool xInitialEdge() const { return m_xInitialEdge; }
     bool xmlOnly() const { return m_xmlOnly; }
+    bool logEnable() const { return m_logEnable; }
     bool topIfacesSupported() const { return lintOnly() && !hierarchical(); }
 
     int buildJobs() const VL_MT_SAFE { return m_buildJobs; }
@@ -575,6 +582,8 @@ public:
     string xAssign() const { return m_xAssign; }
     string xInitial() const { return m_xInitial; }
     string xmlOutput() const { return m_xmlOutput; }
+    string logFilename() const { return m_logFilename; }
+    std::ofstream& logFile() { return m_logFile; }
 
     const V3StringSet& cppFiles() const { return m_cppFiles; }
     const V3StringList& cFlags() const { return m_cFlags; }
