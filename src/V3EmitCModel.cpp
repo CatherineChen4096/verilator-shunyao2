@@ -523,28 +523,28 @@ class EmitCModel final : public EmitCFunc {
     {
         const AstNodeDType* const dtypep = typep->skipRefp();
         if (const auto* const adtypep = VN_CAST(dtypep, AssocArrayDType)) {
-            assert(false);  // TODO
+            return -1;  // TODO
         } else if (const auto* const adtypep = VN_CAST(dtypep, DynArrayDType)) {
-            assert(false);  // TODO
+            return -1;  // TODO
         } else if (const auto* const adtypep = VN_CAST(dtypep, QueueDType)) {
-            assert(false);  // TODO
+            return -1;  // TODO
         } else if (const auto* const adtypep = VN_CAST(dtypep, ClassRefDType)) {
-            assert(false);  // TODO
+            return -1;  // TODO
         } else if (const auto* const adtypep = VN_CAST(dtypep, UnpackArrayDType)) {
             if (adtypep->isCompound()) compound = true;
             const size_t sub_width = calcUnderhoodLayoutSize(adtypep->subDTypep(), compound);
             return sub_width * adtypep->declRange().elements();
         } else if (const AstBasicDType* const bdtypep = dtypep->basicp()) {
             if (bdtypep->keyword() == VBasicDTypeKwd::CHARPTR) {
-                assert(false); // TODO
+                return -1;  // TODO
             } else if (bdtypep->keyword() == VBasicDTypeKwd::SCOPEPTR) {
-                assert(false);  // TODO
+                return -1;  // TODO
             } else if (bdtypep->keyword().isDouble()) {
-                assert(false);  // TODO
+                return -1;  // TODO
             } else if (bdtypep->keyword().isString()) {
-                assert(false);  // TODO
+                return -1;  // TODO
             } else if (bdtypep->keyword().isMTaskState()) {
-                assert(false);  // TODO
+                return -1;  // TODO
             } else if (dtypep->widthMin() <= VL_BYTESIZE) {  // Handle unpacked arrays; not bdtypep->width
                 return VL_BYTESIZE;
             } else if (dtypep->widthMin() <= VL_SHORTSIZE) {
@@ -560,8 +560,6 @@ class EmitCModel final : public EmitCFunc {
                 return VL_IDATASIZE * dtypep->widthWords();
             }
         }
-        typep->v3fatalSrc(
-                "Unknown data type in var type emitter: " << dtypep->prettyName());
         return -1;
     }
 
@@ -609,6 +607,8 @@ class EmitCModel final : public EmitCFunc {
         puts("    const char *prefixName = \"" + prefixNameProtect(modp) + "\";\n");
         puts("\n");
         for (const auto& var : varList) {
+            int var_dtype_size = calcUnderhoodLayoutSize(var->dtypep());
+            if (var_dtype_size < 0) { continue; }
             puts("{\n");
             puts("    MetaInfo info;\n");
             puts("    info.offset = offsetof(" + prefixNameProtect(modp) + ", " + var->nameProtect() + ");\n");
@@ -618,7 +618,7 @@ class EmitCModel final : public EmitCFunc {
                 puts("    info.msb = " + std::to_string(basicp->lo() + var->width() - 1) + ";\n");
                 puts("    info.lsb = " + std::to_string(basicp->lo()) + ";\n");
             } else {
-                puts("    info.width = " + std::to_string(calcUnderhoodLayoutSize(var->dtypep())) + ";\n");
+                puts("    info.width = " + std::to_string(var_dtype_size) + ";\n");
             }
             puts("    info_map.emplace(process_meta_string(prefixName, \"" + var->name() + "\"), info);\n");
             puts("}\n");
