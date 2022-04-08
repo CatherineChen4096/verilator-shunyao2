@@ -23,7 +23,7 @@ Args = parser.parse_args()
 os.chdir(Args.directory)
 
 rev = 'UNKNOWN_REV'
-data = os.popen('git describe').read()
+data = os.popen('git describe --always').read()
 
 #match = re.search(r'^(v[0-9].*)', data)
 #if match:
@@ -37,7 +37,13 @@ if (re.search('Changed but not updated', data, flags=re.IGNORECASE)
         or re.search('Changes not staged', data, flags=re.IGNORECASE)):
     rev += " (mod)"
 
-print("static const char* const DTVERSION_rev = \"" + rev + "\";")
+#data = os.popen("cat ../src/*.cpp ../src/*.h ../include/*.cpp ../include/*.h | md5sum").read()
+path = os.getcwd()
+os.chdir('../')
+data = os.popen("./bin/genMD5.sh").read()
+os.chdir(path)
+md5 = " md5 "+data.split(' ')[0][:8]
+print("static const char* const DTVERSION_rev = \"SHUNYAO-V1.3 " + rev + md5 + "\";")
 
 # Warn after the print, so at least the header has good contents
 if re.search('UNKNOWN', rev):
