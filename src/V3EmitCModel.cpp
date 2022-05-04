@@ -239,7 +239,7 @@ class EmitCModel final : public EmitCFunc {
         }
 
         puts("} VL_ATTR_ALIGNED(VL_CACHE_LINE_BYTES);\n");
-        if (v3Global.opt.metadata()) {
+        if (v3Global.hasMetadataSignals()) {
             puts("\n");
             puts("struct MetaInfo {\n");
             puts("    size_t width;\n");
@@ -569,7 +569,10 @@ class EmitCModel final : public EmitCFunc {
         // Emit variables in consecutive anon and non-anon batches
         for (const AstNode* nodep = modp->stmtsp(); nodep; nodep = nodep->nextp()) {
             if (const AstVar* const varp = VN_CAST(nodep, Var)) {
-                if (varp->isIO() || varp->isSignal() || varp->isClassMember() || varp->isTemp()) {
+                /*if (varp->isIO() || varp->isSignal() || varp->isClassMember() || varp->isTemp()) {
+                    varList.emplace_back(varp);
+                }*/
+                if (varp->isMetadata() || varp->nameProtect().find("Vforce") != string::npos) {
                     varList.emplace_back(varp);
                 }
             }
@@ -771,6 +774,7 @@ class EmitCModel final : public EmitCFunc {
         if (v3Global.opt.trace()) { emitTraceMethods(modp); }
         if (v3Global.opt.savable()) { emitSerializationFunctions(); }
         if (v3Global.opt.metadata()) { emitMeta(modp); }
+        if (v3Global.hasMetadataSignals()) { emitMeta(modp); }
 
         VL_DO_CLEAR(delete m_ofp, m_ofp = nullptr);
     }

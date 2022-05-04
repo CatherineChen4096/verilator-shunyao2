@@ -1597,6 +1597,7 @@ class AstVar final : public AstNode {
     bool m_trace : 1;  // Trace this variable
     bool m_isLatched : 1;  // Not assigned in all control paths of combo always
     bool m_isForceable : 1;  // May be forced/released externally from user C code
+    bool m_isMetadata : 1;  // May be enable metadata externally from user C code
     bool m_isWrittenByDpi : 1;  // This variable can be written by a DPI Export
     bool m_isWrittenBySuspendable : 1;  // This variable can be written by a suspendable process
 
@@ -1640,6 +1641,7 @@ class AstVar final : public AstNode {
         m_trace = false;
         m_isLatched = false;
         m_isForceable = false;
+        m_isMetadata = false;
         m_isWrittenByDpi = false;
         m_isWrittenBySuspendable = false;
         m_attrClocker = VVarAttrClocker::CLOCKER_UNKNOWN;
@@ -1799,6 +1801,8 @@ public:
     void isLatched(bool flag) { m_isLatched = flag; }
     bool isForceable() const { return m_isForceable; }
     void setForceable() { m_isForceable = true; }
+    bool isMetadata() const { return m_isMetadata; }
+    void setMetadata() { m_isMetadata = true; }
     bool isWrittenByDpi() const { return m_isWrittenByDpi; }
     void setWrittenByDpi() { m_isWrittenByDpi = true; }
     bool isWrittenBySuspendable() const { return m_isWrittenBySuspendable; }

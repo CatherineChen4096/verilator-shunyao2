@@ -110,6 +110,7 @@ class V3Global final {
     bool m_hasClasses = false;  // Design uses SystemVerilog classes
     bool m_usesTiming = false;  // Design uses timing constructs
     bool m_hasForceableSignals = false;  // Need to apply V3Force pass
+    bool m_hasMetadataSignals = false;
     bool m_hasSCTextSections = false;  // Has `systemc_* sections that need to be emitted
     bool m_useParallelBuild = false;  // Use parallel build for model
     bool m_useRandomizeMethods = false;  // Need to define randomize() class methods
@@ -160,6 +161,8 @@ public:
     void setUsesTiming() { m_usesTiming = true; }
     bool hasForceableSignals() const { return m_hasForceableSignals; }
     void setHasForceableSignals() { m_hasForceableSignals = true; }
+    bool hasMetadataSignals() const { return m_hasMetadataSignals; }
+    void setHasMetadataSignals() { m_hasMetadataSignals = true; }
     bool hasSCTextSections() const VL_MT_SAFE { return m_hasSCTextSections; }
     void setHasSCTextSections() { m_hasSCTextSections = true; }
     V3HierBlockPlan* hierPlanp() const { return m_hierPlanp; }
