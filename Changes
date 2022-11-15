@@ -8,6 +8,101 @@ The changes in each Verilator version are described below.  The
 contributors that suggested a given feature are shown in []. Thanks!
 
 
+shunyao-v1.5
+==========================
+
+**Major:**
+
+* Based on Verilator Verilator 5.003 devel.  (2022/11/15)
+* Introduce a new combinational logic optimizer (DFG), that can yield
+    significant performance improvements on some designs. [Geza Lore, Shunyao CAD] (upstream)
+
+
+shunyao-v1.4
+==========================
+
+**Major:**
+
+* Based on Verilator develop-v5 branch Verilator 5.001 devel.  (2022/08/07)
+* Fully support the Active and NBA scheduling regions as defined by the 
+   SystemVerilog standard  (#3278, #3384). [Geza Lore, Shunyao CAD]  (upstream)
+* VCD tracing is now parallelized with --threads (#3449). [Geza Lore, Shunyao CAD] (upstream)
+* Improve conditional merging optimization (#3125). [Geza Lore, Shunyao CAD] (upstream)
+
+
+**Minor:**
+
+* Add operator != to VlWide  [Geza Lore, Shunyao CAD] (upstream)
+
+
+shunyao-v1.3
+==========================
+
+**Major:**
+
+* Update Verilator main stream to 4.221 devel (2022/03/27)
+* Reduce .rodata footprint of trace initialization (#3250). [Geza Lore, Shunyao CAD]  (upstream)
+* Add trace dumpvars() call for selective runtime tracing (#3322). [Shunyao CAD]  (upstream)
+* Fix splitting of _eval and other top level functions. [Geza Lore, Shunyao CAD]  (upstream)
+* Support force/release (#2431) (#2593). [Shunyao CAD]  (upstream)
+* Add 'forceable' attribute to allow forcing from C++. (#3272). [Geza Lore, Shunyao CAD]  (upstream)
+* Split --prof-threads into --prof-exec and --prof-pgo (#3365). [Geza Lore, Shunyao CAD]  (upstream)
+* Support static selection of traced scopes (#3323)
+* Support 'always_unroll' pragma (#3260)
+* Improve VlAssocArray performance
+* Support non-ANSI interface port declarations (#3439). [Geza Lore, Shunyao CAD]
+* Define VM_TRACE_VCD when tracing in VCD format. [Geza Lore, Shunyao CAD]
+* Fix passing VL_TRACE_FST_WRITER_THREAD in CMake build. [Geza Lore, Shunyao CAD]
+* Support concat assignment to packed array (#3446).
+
+
+**Minor:**
+
+* Support new option: --log to record compile process into a log file.
+* disable Incremental Archive in Makefile.
+
+shunyao-v1.2
+==========================
+
+**Major:**
+
+* New Feature - support --metadata for C++ reflection.
+
+
+shunyao-v1.1-biren-1
+==========================
+
+**Major:**
+
+* New Feature - DFG to improve runtime performance.
+* New Feature - force/release implemented in verilator.
+
+**Minor:**
+
+* fix gdb testplusargs abort issue while enable multithread.
+
+
+shunyao-v1.1
+==========================
+
+**Major:**
+
+* Update Verilator main stream to 4.217 devel (2021/12/20)
+* Fix %0 format on $value$plusargs. (upstream)
+* Add profile-guided optmization of mtasks. (upstream)
+* Improve performance of V3Scoreboard. (upstream)
+* Reduce .rodata footprint of trace initialization (upstream)
+* Support tracing through --hierarchical/--lib-create libraries (upstream)
+* Fix splitting of large _eval and related functions (updstream)
+* Imporve performance of V3TSP.
+
+**Minor:**
+
+* Add the timestamps of the verilator compile steps.
+* Fix verilator_profcfunc rounding error too big issue.
+* remove duplicated *.v *.h in hierarchical mode.
+
+
 Verilator 5.003 devel
 ==========================
 
