@@ -239,7 +239,7 @@ class EmitCModel final : public EmitCFunc {
         }
 
         puts("} VL_ATTR_ALIGNED(VL_CACHE_LINE_BYTES);\n");
-        if (v3Global.hasMetadataSignals()) {
+	if (v3Global.hasMetadataSignals() || v3Global.opt.metadata()) {
             puts("\n");
             puts("struct MetaInfo {\n");
             puts("    size_t width;\n");
@@ -773,8 +773,7 @@ class EmitCModel final : public EmitCFunc {
         emitStandardMethods2(modp);
         if (v3Global.opt.trace()) { emitTraceMethods(modp); }
         if (v3Global.opt.savable()) { emitSerializationFunctions(); }
-        if (v3Global.opt.metadata()) { emitMeta(modp); }
-        if (v3Global.hasMetadataSignals()) { emitMeta(modp); }
+	if (v3Global.hasMetadataSignals() || v3Global.opt.metadata()) { emitMeta(modp); }
 
         VL_DO_CLEAR(delete m_ofp, m_ofp = nullptr);
     }
